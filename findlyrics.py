@@ -33,12 +33,14 @@ def get_spotify_window_title():
 def get_current_song_info():
     window_title = get_spotify_window_title()
 
+    # Seperate the artist and song name from the window title
     if window_title != "":
         split_title = window_title.split(" - ")
 
         return split_title # [artist, song_name]
 
 def find_lyrics(artist, song_name):
+    # Get the search results
     base_url = 'https://api.genius.com'
     headers = {'Authorization': 'Bearer ' + 'tuBG1HjEK2A4XvI9lItFPguQklA02Zi5xXeZxrquQe_uO_zcSEbHzhu7VPr0A6nc'}
     search_url = base_url + '/search'
@@ -49,11 +51,13 @@ def find_lyrics(artist, song_name):
 
     remote_song_info = None
 
+    # Narrow down the results to the song we are looking for
     for hit in json['response']['hits']:
         if artist.lower() in hit['result']['primary_artist']['name'].lower():
             remote_song_info = hit
             break
 
+    # The API does not give access to the lyrics, so I have to scrape them from the URL of the song using BeautifulSoup
     if remote_song_info:
         page = requests.get(remote_song_info['result']['url'])
         html = BeautifulSoup(page.text, 'html.parser')
