@@ -43,7 +43,7 @@ def get_current_song_info():
 def find_lyrics(artist, song_name):
     # Get the search results
     base_url = 'https://api.genius.com'
-    headers = {'Authorization': 'Bearer ' + 'tuBG1HjEK2A4XvI9lItFPguQklA02Zi5xXeZxrquQe_uO_zcSEbHzhu7VPr0A6nc'}
+    headers = {'Authorization': 'Bearer ' + 'TOKEN'}
     search_url = base_url + '/search'
     data = {'q': song_name + ' ' + artist}
     response = requests.get(search_url, data=data, headers=headers)
