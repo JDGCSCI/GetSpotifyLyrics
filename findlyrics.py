@@ -2,6 +2,7 @@ import win32gui
 import re
 import requests
 from bs4 import BeautifulSoup
+import tkinter as tk
 
 def get_spotify_window_title():
     # Older versions of Spotify
@@ -63,23 +64,29 @@ def find_lyrics(artist, song_name):
         html = BeautifulSoup(page.text, 'html.parser')
         lyrics = html.find('div', class_='lyrics').get_text()
 
-        return artist, song_name, remote_song_info['result']['url'], lyrics.strip()
+        return artist, song_name, lyrics.strip()
     else:
         print('"' + artist + " - " + song_name + '" could not be found using the Genius API!')
 
-def get_current_lyrics():
+def main():
     current_song_info = get_current_song_info()
 
     if current_song_info:
-        artist, song_name, url, current_song_lyrics = find_lyrics(current_song_info[0], current_song_info[1])
+        artist, song_name, current_song_lyrics = find_lyrics(current_song_info[0], current_song_info[1])
 
         if current_song_lyrics:
-            print(artist + " - " + song_name)
-            print(url + '\n')
-            print(current_song_lyrics)
+            # Create the GUI window
+            guiWindow = tk.Tk()
+            guiWindow.title(artist + " - " + song_name)
+            guiWindow.geometry("700x700")
 
-def main():
-    get_current_lyrics()
+            # Insert the lyrics into the textbox
+            textBox = tk.Text(guiWindow, height=43)
+            textBox.insert(tk.INSERT, current_song_lyrics)
+            textBox.config(state="disabled")
+            textBox.pack()
+            
+            guiWindow.mainloop()
 
 if __name__ == "__main__":
     main()
